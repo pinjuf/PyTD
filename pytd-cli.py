@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 
-from pytd import Task, TaskList
+from pytd import Task, TaskList, DEFAULT_FILENAME
 import os
 
 tasklist = TaskList()
 
-# TODO: If filename is empty, check if DEFAULT_FILENAME exists
 tasklist.filename = input("Filename of TaskList    : ")
+if not tasklist.filename:
+    tasklist.filename = DEFAULT_FILENAME
 if os.path.exists(tasklist.filename):
     tasklist.load()
 else:
@@ -37,10 +38,10 @@ while True:
             tasklist.save()
             exit(0)
         elif cmd.split()[0] in ("d", "done"):
-            if len(cmd.split())>1:
-                current.subtasks[int(cmd.split()[1])-1].set_done(True)
-            else:
-                current.set_done(True)
+            task = current.subtasks[int(cmd.split()[1])-1] if len(cmd.split())>1 else current
+            if not task.can_be_done():
+                print("Error: You have not finished the required tasks to finish this task.")
+            task.set_done(True)
         elif cmd.split()[0] in ("U", "undo", "undone"):
             if len(cmd.split())>1:
                 current.subtasks[int(cmd.split()[1])-1].set_done(False)
