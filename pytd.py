@@ -25,9 +25,6 @@ class Task():
             output[self.title]["subtasks"] |= subtask.build_dict()
         return output
 
-    def build_yaml(self, stream=None):
-        return yaml.dump(self.build_dict(), stream, default_flow_style=False, allow_unicode=True)
-
     def parse_dict(self, in_dict, title=None):
         title = title if title else list(in_dict.keys())[0]
         self.title = title
@@ -38,9 +35,6 @@ class Task():
             st = Task()
             st.parse_dict(in_dict[title]["subtasks"], title=subtask_title)
             self.add_subtask(st)
-
-    def parse_yaml(self, in_yaml, title=None):
-        self.parse_dict(yaml.safe_load(in_yaml), title=None)
 
     def can_be_done(self):
         output = True
@@ -85,9 +79,15 @@ class TaskList(Task):
         for subtask in subtasks:
             self.add_subtask(subtask)
         self.filename = DEFAULT_FILENAME
+
     def save(self):
         with open(self.filename, "w") as file:
             self.build_yaml(file)
     def load(self):
         with open(self.filename, "r") as file:
             self.parse_yaml(file)
+
+    def parse_yaml(self, in_yaml, title=None):
+        self.parse_dict(yaml.safe_load(in_yaml), title=None)
+    def build_yaml(self, stream=None):
+        return yaml.dump(self.build_dict(), stream, default_flow_style=False, allow_unicode=True)
