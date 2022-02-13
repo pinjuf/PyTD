@@ -1,0 +1,37 @@
+
+----< PyTD CLI 0v1 >-----
+
+Commandline-Interface for PyTD, the Python TODO list.
+
+--< Commands >--
+
+ - h, help:
+    display this help
+
+ - l, ls, list, show:
+    show your currently selected task, its description and its direct children
+
+ - s, select [INDEX]:
+    switch to a subtask of your currently selected task by [INDEX] (found by using "list")
+
+ - u, up:
+    switch to the parent of the current task
+
+ - w, write, save:
+    save your TaskList as a .yml file
+
+ - q, quit, exit:
+    exit without saving
+
+ - x, wq:
+    write and quit
+
+ - d, do, done <INDEX>
+    set the task selected by <INDEX> as done. If no index is supplied, the current task is set.
+    Requires all subtasks to be done.
+
+ - U, undo, undone <INDEX>
+    same as "done", but sets the task as not done
+
+ - r, remove, del, delete [INDEX]
+    delete the task selected by [INDEX]
