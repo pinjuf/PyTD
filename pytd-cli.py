@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
 
 from pytd import Task, TaskList, DEFAULT_FILENAME
-import os
+import os, sys
 
 with open("data/cli-help", "r") as file:
     CLI_HELP = file.read()
 
 tasklist = TaskList()
 
-tasklist.filename = input("Filename of TaskList    : ")
+if len(sys.argv)==2:
+    tasklist.filename = sys.argv[1]
+else:
+    tasklist.filename = input("Filename of TaskList    : ")
 if not tasklist.filename:
     tasklist.filename = DEFAULT_FILENAME
 if os.path.exists(tasklist.filename):
@@ -45,12 +48,12 @@ while True:
             tasklist.save()
             exit(0)
         elif cmd.split()[0] in ("d", "do", "done"):
-            task = current.subtasks[int(cmd.split()[1])-1] if len(cmd.split())>1 else current
+            task = current.subtasks[int(cmd.split()[1])-1] if len(cmd.split())==2 else current
             if not task.can_be_done():
                 print("Error: You have not done the required tasks to finish this task.")
             task.set_done(True)
         elif cmd.split()[0] in ("U", "undo", "undone"): # i have no idea why parents are automatically set as undone too, but it works
-            if len(cmd.split())>1:
+            if len(cmd.split())==2:
                 current.subtasks[int(cmd.split()[1])-1].set_done(False)
             else:
                 current.set_done(False)
@@ -58,6 +61,8 @@ while True:
             del current.subtasks[int(cmd.split()[1])-1]
         elif cmd in ("root"):
             current = tasklist
+        elif cmd in ("n", "new", "add"):
+            current.add_subtask(Task(title=input("Name of task: "),desc=input("Description of the task: ")))
         else:
             raise Exception()
     except:

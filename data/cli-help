@@ -31,7 +31,13 @@ Commandline-Interface for PyTD, the Python TODO list.
     Requires all subtasks to be done.
 
  - U, undo, undone <INDEX>
-    same as "done", but sets the task as not done
+    opposite "done", but sets the task as not done
 
  - r, remove, del, delete [INDEX]
     delete the task selected by [INDEX]
+
+ - root
+    go the root/top of your TaskList
+
+ - n, new, add
+    add a new subtask to the current task
