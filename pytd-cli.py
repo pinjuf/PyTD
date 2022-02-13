@@ -3,6 +3,9 @@
 from pytd import Task, TaskList, DEFAULT_FILENAME
 import os
 
+with open("data/cli-help", "r") as file:
+    CLI_HELP = file.read()
+
 tasklist = TaskList()
 
 tasklist.filename = input("Filename of TaskList    : ")
@@ -22,7 +25,9 @@ while True:
     if not cmd:
         continue
     try:
-        if cmd in ("l", "ls", "list", "show"):
+        if cmd in ("h", "help"):
+            print(CLI_HELP)
+        elif cmd in ("l", "ls", "list", "show"):
             print(current.pretty_show())
         elif cmd.split()[0] in ("s", "select"):
             index = int(cmd.split()[1]) -1
@@ -30,6 +35,8 @@ while True:
         elif cmd in ("u", "up"):
             if current.parent:
                 current = current.parent
+            else:
+                print("Error: You are at top of your TaskList")
         elif cmd in ("w", "write", "save"):
             tasklist.save()
         elif cmd in ("q", "quit", "exit"):
@@ -37,12 +44,12 @@ while True:
         elif cmd in ("x", "wq"):
             tasklist.save()
             exit(0)
-        elif cmd.split()[0] in ("d", "done"):
+        elif cmd.split()[0] in ("d", "do", "done"):
             task = current.subtasks[int(cmd.split()[1])-1] if len(cmd.split())>1 else current
             if not task.can_be_done():
-                print("Error: You have not finished the required tasks to finish this task.")
+                print("Error: You have not done the required tasks to finish this task.")
             task.set_done(True)
-        elif cmd.split()[0] in ("U", "undo", "undone"):
+        elif cmd.split()[0] in ("U", "undo", "undone"): # i have no idea why parents are automatically set as undone too, but it works
             if len(cmd.split())>1:
                 current.subtasks[int(cmd.split()[1])-1].set_done(False)
             else:
