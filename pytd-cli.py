@@ -23,7 +23,10 @@ else:
 current = tasklist
 
 while True:
-    cmd = input("PyTD> ").strip()
+    try:
+        cmd = input("PyTD> ").strip()
+    except:
+        exit(0)
 
     if not cmd:
         continue
@@ -31,6 +34,7 @@ while True:
         if cmd in ("h", "help"):
             print(CLI_HELP)
         elif cmd in ("l", "ls", "list", "show"):
+            print(current.pretty_path())
             print(current.pretty_show())
         elif cmd.split()[0] in ("s", "select"):
             index = int(cmd.split()[1]) -1

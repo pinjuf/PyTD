@@ -68,6 +68,19 @@ class Task():
                 output += "\n\t" + str(index+1) + ") " + subtask.pretty_show(detailed=False)
         return output
 
+    def pretty_path(self):
+        output = ""
+        if self.parent:
+            output += self.parent.pretty_path() + " > "
+        output += self.title
+        return output
+
+    def path(self):
+        output = [self]
+        if self.parent:
+            output = self.parent.path() + output
+        return output
+
 class TaskList(Task):
 
     def __init__(self, title="???", desc="", subtasks=[], filename=DEFAULT_FILENAME):
