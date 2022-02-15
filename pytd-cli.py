@@ -29,28 +29,36 @@ while True:
         exit(0)
 
     if not cmd:
+        print("Use \"help\" to view the usage.")
         continue
     try:
         if cmd in ("h", "help"):
             print(CLI_HELP)
+
         elif cmd in ("l", "ls", "list", "show"):
             print(current.pretty_path())
             print(current.pretty_show())
+
         elif cmd.split()[0] in ("s", "select"):
             index = int(cmd.split()[1]) -1
             current = current.subtasks[index]
+
         elif cmd in ("u", "up"):
             if current.parent:
                 current = current.parent
             else:
                 print("Error: You are at top of your TaskList")
+
         elif cmd in ("w", "write", "save"):
             tasklist.save()
+
         elif cmd in ("q", "quit", "exit"):
             exit(0)
+
         elif cmd in ("x", "wq"):
             tasklist.save()
             exit(0)
+
         elif cmd.split()[0] in ("d", "do", "done"):
             task = current.subtasks[int(cmd.split()[1])-1] if len(cmd.split())==2 else current
             if not task.can_be_done():
@@ -61,12 +69,22 @@ while True:
                 current.subtasks[int(cmd.split()[1])-1].set_done(False)
             else:
                 current.set_done(False)
+
         elif cmd.split()[0] in ("r", "remove", "del", "delete"):
             del current.subtasks[int(cmd.split()[1])-1]
-        elif cmd in ("root"):
+
+        elif cmd in ("root",):
             current = tasklist
+
         elif cmd in ("n", "new", "add"):
             current.add_subtask(Task(title=input("Name of task: "),desc=input("Description of the task: ")))
+
+        elif cmd in ("t", "tree"):
+            print(current.pretty_tree())
+
+        elif cmd in ("rt", "roottree", "rtree"):
+            print(tasklist.pretty_tree())
+
         else:
             raise Exception()
     except:

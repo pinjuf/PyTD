@@ -62,8 +62,7 @@ class Task():
         output = "[X] " if self.get_done() else "[ ] "
         output += self.title
         if detailed:
-            output += "\n\t"
-            output += self.desc
+            output += "\n\t" + self.desc
             for index, subtask in enumerate(self.subtasks):
                 output += "\n\t" + str(index+1) + ") " + subtask.pretty_show(detailed=False)
         return output
@@ -73,6 +72,14 @@ class Task():
         if self.parent:
             output += self.parent.pretty_path() + " > "
         output += self.title
+        return output
+
+    def pretty_tree(self):
+        output = self.pretty_show(detailed=False)
+        for subtask in self.subtasks:
+            st = subtask.pretty_tree()
+            for line in st.split("\n"):
+                output += "\n\t" + line
         return output
 
     def path(self):

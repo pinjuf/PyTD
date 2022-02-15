@@ -41,3 +41,9 @@ Commandline-Interface for PyTD, the Python TODO list.
 
  - n, new, add
     add a new subtask to the current task
+
+ - t, tree
+    show the task tree from the current task
+
+ - rt, roottree, rtree
+    show the complete task tree
