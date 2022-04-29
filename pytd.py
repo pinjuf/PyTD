@@ -5,7 +5,7 @@ import yaml
 DEFAULT_FILENAME = "TODO.yml"
 
 class Task():
-    def __init__(self, title="???", desc="", subtasks=[]):
+    def __init__(self, title="", desc="", subtasks=[]):
         self.title    = title
         self.done     = False
         self.desc     = desc
@@ -62,7 +62,8 @@ class Task():
         output = "[X] " if self.get_done() else "[ ] "
         output += self.title
         if detailed:
-            output += "\n\t" + self.desc
+            if self.desc:
+                output += "\n\t" + self.desc
             for index, subtask in enumerate(self.subtasks):
                 output += "\n\t" + str(index+1) + ") " + subtask.pretty_show(detailed=False)
         return output
@@ -89,6 +90,11 @@ class Task():
         return output
 
 class TaskList(Task):
+    """
+    Basically the same as a Task, but it has
+     - no parents
+     - the ability to read and write to a YML file
+    """
 
     def __init__(self, title="???", desc="", subtasks=[], filename=DEFAULT_FILENAME):
         self.title    = title

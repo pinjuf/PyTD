@@ -6,30 +6,36 @@ import os, sys
 with open("data/cli-help", "r") as file:
     CLI_HELP = file.read()
 
+def ask(prompt, condition=lambda i: i != ""):
+    output = ""
+    while not condition(output:=input(prompt)):
+        pass
+    return output
+
 tasklist = TaskList()
 
 if len(sys.argv)==2:
     tasklist.filename = sys.argv[1]
 else:
-    tasklist.filename = input("Filename of TaskList    : ")
+    tasklist.filename = input("[?] Filename of TaskList    : ")
 if not tasklist.filename:
     tasklist.filename = DEFAULT_FILENAME
 if os.path.exists(tasklist.filename):
     tasklist.load()
 else:
-    tasklist.title = input("Name of TaskList        : ")
-    tasklist.desc = input("Description of TaskList : ")
+    tasklist.title = ask("[?] Name of TaskList        : ")
+    tasklist.desc = input("[?] Description of TaskList : ")
 
 current = tasklist
 
 while True:
     try:
-        cmd = input("PyTD> ").strip()
+        cmd = input("[P] PyTD> ").strip()
     except:
         exit(0)
 
     if not cmd:
-        print("Use \"help\" to view the usage.")
+        print("[i] Use \"help\" to view this programs usage.")
         continue
     try:
         if cmd in ("h", "help"):
@@ -47,7 +53,7 @@ while True:
             if current.parent:
                 current = current.parent
             else:
-                print("Error: You are at top of your TaskList")
+                print("[!] You are at top of your TaskList")
 
         elif cmd in ("w", "write", "save"):
             tasklist.save()
@@ -62,7 +68,7 @@ while True:
         elif cmd.split()[0] in ("d", "do", "done"):
             task = current.subtasks[int(cmd.split()[1])-1] if len(cmd.split())==2 else current
             if not task.can_be_done():
-                print("Error: You have not done the required tasks to finish this task.")
+                print("[!] You have not done the required tasks to finish this task.")
             task.set_done(True)
         elif cmd.split()[0] in ("U", "undo", "undone"): # i have no idea why parents are automatically set as undone too, but it works
             if len(cmd.split())==2:
@@ -77,7 +83,7 @@ while True:
             current = tasklist
 
         elif cmd in ("n", "new", "add"):
-            current.add_subtask(Task(title=input("Name of task: "),desc=input("Description of the task: ")))
+            current.add_subtask(Task(title=ask("[?] Name of task: "),desc=input("[?] Description of the task: ")))
 
         elif cmd in ("t", "tree"):
             print(current.pretty_tree())
@@ -88,6 +94,6 @@ while True:
         else:
             raise Exception()
     except:
-        print("Something didn't work out with your command.")
+        print("[!] Something didn't work out with your command.")
 
 tasklist.save()
